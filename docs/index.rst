@@ -38,10 +38,11 @@ GitHub Projects
 
 .. toctree::
     :maxdepth: 2
-    :caption: Experiments
+    :caption: Miscellaneous
 
     wireless_charging_car_dock
     atrix_lapdock
+    my_awesome_server
 
 .. toctree::
     :maxdepth: 2
