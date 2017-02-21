@@ -114,18 +114,43 @@ Run the following to set LUKS up:
 
 .. code-block:: bash
 
-    sudo dnf install cryptsetup
+    sudo dnf install cryptsetup btrfs-progs
     sudo sh -c 'umask 0277 && dd if=/dev/random of=/etc/hdd_key bs=1 count=128'
     (set -e; for d in /dev/sd[a-f]; do
         sudo fdisk -l $d |grep "Disk $d"  # Make sure this is a 10TB drive.
         sudo cryptsetup --key-file /etc/hdd_key --cipher aes-cbc-essiv:sha256 luksFormat $d
-        serial=$(lsblk -dno SERIAL $d)
+        name=storage_$(lsblk -dno SERIAL $d)
         uuid=$(lsblk -dno UUID $d)
-        sudo cryptsetup --key-file /etc/hdd_key luksOpen $d $serial
-        sudo tee -a /etc/crypttab <<< "$serial UUID=$uuid /etc/hdd_key luks"
+        sudo cryptsetup --key-file /etc/hdd_key luksOpen $d $name
+        sudo tee -a /etc/crypttab <<< "$name UUID=$uuid /etc/hdd_key luks"
     done)
 
 Reboot to make sure crypttab works and all disks are in ``/dev/mapper``.
+
+Now it's time to create the Btrfs partition on top of LUKS. I'll be creating the following subvolumes with quotas:
+
+=========== =======
+Name           Size
+=========== =======
+Local		   1 TB
+Main		   * TB
+Media		   3 TB
+Old		    1.52 TB
+Stuff		   2 TB
+Temporary	   2 TB
+TimeMachine	   2 TB
+=========== =======
+
+.. code-block:: bash
+
+    sudo mkfs.btrfs -L storage -m raid1 -d raid1 /dev/mapper/storage_*  # TODO raid10
+    uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<!uuid:)[0-9a-f-]+$')
+    sudo mkdir /mnt/storage
+    sudo mount UUID=$uuid /mnt/storage
+    for n in Local Main Media Old Stuff Temporary TimeMachine; do sudo btrfs subvolume create /mnt/storage/$n; done
+    # TODO: set-default for Main.
+    # TODO: Add to fstab all devices in RAID.
+    # TODO: Add to fstab subvolumes.
 
 References
 ==========
