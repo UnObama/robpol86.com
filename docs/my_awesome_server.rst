@@ -118,7 +118,7 @@ Run the following to set LUKS up:
     sudo dnf install cryptsetup btrfs-progs
     sudo sh -c 'umask 0277 && dd if=/dev/random of=/etc/hdd_key bs=1 count=128'
     (set -e; for d in /dev/sd[a-f]; do
-        sudo fdisk -l $d |grep "Disk $d"  # Make sure this is a 10TB drive.
+        sudo fdisk -l $d |grep "Disk $d"
         sudo cryptsetup --key-file /etc/hdd_key --cipher aes-cbc-essiv:sha256 luksFormat $d
         name=storage_$(lsblk -dno SERIAL $d)
         uuid=$(lsblk -dno UUID $d)
