@@ -11,8 +11,9 @@ I'll be outlining the steps I took in setting up my current home Linux server. I
 2. `Docker <https://www.docker.com/>`_ server.
 3. Automated Bluray/DVD ripping (backups) station.
 4. `Plex <https://www.plex.tv/>`_ media server.
-5. `Metrics <https://github.com/influxdata/chronograf>`_ collector and email alerting.
-6. Tape backup server.
+5. Apple Time Machine backup server.
+6. `Metrics <https://github.com/influxdata/chronograf>`_ collector and email alerting.
+7. Tape backup server.
 
 Hardware
 ========
