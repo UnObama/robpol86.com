@@ -131,25 +131,21 @@ Reboot to make sure crypttab works and all disks are in ``/dev/mapper``.
 Btrfs
 -----
 
-Now it's time to create the Btrfs partition on top of LUKS:
+Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subvolumes (for future snapshotting:
 
 .. code-block:: bash
 
     # Create the Btrfs top volume.
     sudo mkfs.btrfs -L storage -m raid1 -d raid1 /dev/mapper/storage_*  # TODO raid10
-    sudo mkdir /mnt/storage
     uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<=uuid: )[0-9a-f-]+$')
-    sudo mount UUID=$uuid /mnt/storage
-    # Create subvolumes.
     devices=$(set -- /dev/mapper/storage_*; IFS=,; echo "$*" |sed 's /dev device=/dev g')
+    sudo tee -a /etc/fstab <<< "UUID=$uuid /mnt/storage btrfs $devices 0 2"
+    sudo mkdir /mnt/storage
+    sudo mount -a  # Auto-mount everything we added to /etc/fstab.
+    # Create subvolumes.
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
         sudo btrfs subvolume create /mnt/storage/$n
-        sudo mkdir /mnt/storage_$n
-        sudo tee -a /etc/fstab <<< "UUID=$uuid /mnt/storage_$n btrfs $devices,subvol=$n 0 2"
     done
-    # Mount.
-    sudo umount /mnt/storage  # Don't need this anymore.
-    sudo mount -a  # Auto-mount everything we added to /etc/fstab.
 
 References
 ==========
