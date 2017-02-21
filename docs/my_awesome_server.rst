@@ -127,19 +127,22 @@ Run the following to set LUKS up:
 
 Reboot to make sure crypttab works and all disks are in ``/dev/mapper``.
 
+Btrfs
+-----
+
 Now it's time to create the Btrfs partition on top of LUKS. I'll be creating the following subvolumes with quotas:
 
-=========== =======
-Name           Size
-=========== =======
-Local		   1 TB
-Main		   * TB
-Media		   3 TB
+=========== ==========
+Name        Size
+=========== ==========
+Local		1 TB
+Main		<no quota>
+Media		3 TB
 Old		    1.52 TB
-Stuff		   2 TB
-Temporary	   2 TB
-TimeMachine	   2 TB
-=========== =======
+Stuff		2 TB
+Temporary   2 TB
+TimeMachine	2 TB
+=========== ==========
 
 .. code-block:: bash
 
@@ -147,7 +150,9 @@ TimeMachine	   2 TB
     uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<!uuid:)[0-9a-f-]+$')
     sudo mkdir /mnt/storage
     sudo mount UUID=$uuid /mnt/storage
-    for n in Local Main Media Old Stuff Temporary TimeMachine; do sudo btrfs subvolume create /mnt/storage/$n; done
+    for n in Local Main Media Old Stuff Temporary TimeMachine; do
+        sudo btrfs subvolume create /mnt/storage/$n;
+    done
     # TODO: set-default for Main.
     # TODO: Add to fstab all devices in RAID.
     # TODO: Add to fstab subvolumes.
