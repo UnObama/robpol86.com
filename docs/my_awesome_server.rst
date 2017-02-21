@@ -23,8 +23,8 @@ custom router and be on a `UPS`_.
 =============== ===========================================================================================
 Case            `Travla T2241`_ dual mini-ITX with `Seasonic 250 watt`_ power supplies
 Motherboard/CPU `Supermicro X10SDV-TLN4F-O`_ with Xeon D-1541
-Memory          Kingston KVR24R17D8K4/64 (64 GB)
-M.2 SSD         Samsung 960 PRO 512 GB
+Memory          Kingston KVR24R17D8K4/64 (64GB)
+M.2 SSD         Samsung 960 PRO 512GB
 Storage HDDs    6x Seagate 10TB IronWolf Pro (ST10000NE0004)
 SAS HBA         HighPoint RocketRAID 2721 4-Port Internal / 4 Port External
 External Tape   *TBD*
@@ -99,7 +99,38 @@ I'll be making heavy use of Docker on my server. Fedora ships with a forked vers
 LUKS and Btrfs
 ==============
 
-TODO
+Here is where I format my storage HDDs. I want to use Btrfs since ZFS isn't first-class on Fedora and I want
+Copy-On-Write with snapshots for backing up.
+
+I also want to use Btrfs for RAID10 (RAID5 is a bad idea with 6x10TB and RAID6 stresses all drives when one fails, vs
+RAID10 stressing just one other drive). Since encryption isn't supported by Btrfs at this time I need to use LUKS. Since
+I want to use LUKS with Btrfs my only option is to LUKS the drives first and then use Btrfs RAID ontop of them.
+
+To avoid having to type in the same password six times on boot I'm instead using a random key file stored in /etc. It's
+less safe but I'm encrypting my drives in case my server gets stolen. So since I'm using a traditional LUKS password on
+my main SSD this key file will be encrypted anyhow.
+
+Run the following to set LUKS up:
+
+.. code-block:: bash
+
+    sudo dnf install cryptsetup
+    sudo sh -c 'umask 0277 && dd if=/dev/random of=/etc/hdd_key bs=1 count=128'
+    (set -e; for d in /dev/sd[a-f]; do
+        sudo fdisk -l $d |grep "Disk $d"  # Make sure this is a 10TB drive.
+        sudo cryptsetup --key-file /etc/hdd_key --cipher aes-cbc-essiv:sha256 luksFormat $d
+        serial=$(lsblk -dno SERIAL $d)
+        uuid=$(lsblk -dno UUID $d)
+        sudo cryptsetup --key-file /etc/hdd_key luksOpen $d $serial
+        sudo tee -a /etc/crypttab <<< "$serial UUID=$uuid /etc/hdd_key luks"
+    done)
+
+Reboot to make sure crypttab works and all disks are in ``/dev/mapper``.
+
+References
+==========
+
+* http://nyeggen.com/post/2014-04-05-full-disk-encryption-with-btrfs-and-multiple-drives-in-ubuntu/
 
 .. _TV stand/cabinet: https://www.standoutdesigns.com/products/media-console-solid-wood-majestic-ex-70-inch-wide
 .. _Seasonic 250 watt: https://seasonic.com/product/ss-250-su-active-pfc-f0/
