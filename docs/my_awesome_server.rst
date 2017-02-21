@@ -147,16 +147,20 @@ TimeMachine	2 TB
 
 .. code-block:: bash
 
+    # Create the Btrfs top volume.
     sudo mkfs.btrfs -L storage -m raid1 -d raid1 /dev/mapper/storage_*  # TODO raid10
-    uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<!uuid:)[0-9a-f-]+$')
     sudo mkdir /mnt/storage
+    uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<!uuid:)[0-9a-f-]+$')
     sudo mount UUID=$uuid /mnt/storage
+    # Create subvolumes.
+    devices=$(set -- /dev/mapper/storage_*; IFS=,; echo "$*" |sed 's /dev device=/dev g')
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
-        sudo btrfs subvolume create /mnt/storage/$n;
+        sudo btrfs subvolume create /mnt/storage/$n
+        sudo mkdir /mnt/storage_$n
+        sudo tee -a /etc/fstab <<< "UUID=$uuid /mnt/storage_$n btrfs $devices,subvol=$n 0 2"
     done
-    # TODO: set-default for Main.
-    # TODO: Add to fstab all devices in RAID.
-    # TODO: Add to fstab subvolumes.
+    sudo umount /mnt/storage  # Don't need this anymore.
+    sudo mount -a  # Auto-mount everything we added to /etc/fstab.
 
 References
 ==========
