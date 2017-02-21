@@ -131,28 +131,15 @@ Reboot to make sure crypttab works and all disks are in ``/dev/mapper``.
 Btrfs
 -----
 
-Now it's time to create the Btrfs partition on top of LUKS. I'll be creating the following subvolumes with quotas:
-
-=========== ==========
-Name        Size
-=========== ==========
-Local		1 TB
-Main		*no quota*
-Media		3 TB
-Old		    1.52 TB
-Stuff		2 TB
-Temporary   2 TB
-TimeMachine	2 TB
-=========== ==========
+Now it's time to create the Btrfs partition on top of LUKS:
 
 .. code-block:: bash
 
     # Create the Btrfs top volume.
     sudo mkfs.btrfs -L storage -m raid1 -d raid1 /dev/mapper/storage_*  # TODO raid10
     sudo mkdir /mnt/storage
-    uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<!uuid:)[0-9a-f-]+$')
+    uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<=uuid: )[0-9a-f-]+$')
     sudo mount UUID=$uuid /mnt/storage
-    sudo btrfs quota enable /mnt/storage
     # Create subvolumes.
     devices=$(set -- /dev/mapper/storage_*; IFS=,; echo "$*" |sed 's /dev device=/dev g')
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
@@ -160,13 +147,6 @@ TimeMachine	2 TB
         sudo mkdir /mnt/storage_$n
         sudo tee -a /etc/fstab <<< "UUID=$uuid /mnt/storage_$n btrfs $devices,subvol=$n 0 2"
     done
-    # Apply quotas.
-    sudo btrfs qgroup limit 1t /mnt/storage/Local
-    sudo btrfs qgroup limit 3t /mnt/storage/Media
-    sudo btrfs qgroup limit 1557g /mnt/storage/Old
-    sudo btrfs qgroup limit 2t /mnt/storage/Stuff
-    sudo btrfs qgroup limit 2t /mnt/storage/Temporary
-    sudo btrfs qgroup limit 2t /mnt/storage/TimeMachine
     # Mount.
     sudo umount /mnt/storage  # Don't need this anymore.
     sudo mount -a  # Auto-mount everything we added to /etc/fstab.
