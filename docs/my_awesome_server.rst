@@ -102,9 +102,9 @@ LUKS and Btrfs
 Here is where I format my storage HDDs. I want to use Btrfs since ZFS isn't first-class on Fedora and I want
 Copy-On-Write with snapshots for backing up.
 
-I also want to use Btrfs for RAID10 (RAID5 is a bad idea with 6x10TB and RAID6 stresses all drives when one fails, vs
-RAID10 stressing just one other drive). Since encryption isn't supported by Btrfs at this time I need to use LUKS. Since
-I want to use LUKS with Btrfs my only option is to LUKS the drives first and then use Btrfs RAID ontop of them.
+I also want to use Btrfs for RAID10 (RAID5 is a bad idea with 6x10TB and RAID6 still stresses all drives when one fails,
+vs RAID10 stressing just one other drive). Since encryption isn't supported by Btrfs at this time I need to use LUKS.
+Since I want to use LUKS with Btrfs my only option is to LUKS the drives first and then use Btrfs RAID ontop of them.
 
 To avoid having to type in the same password six times on boot I'm instead using a random key file stored in /etc. It's
 less safe but I'm encrypting my drives in case my server gets stolen. So since I'm using a traditional LUKS password on
