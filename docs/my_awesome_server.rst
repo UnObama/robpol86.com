@@ -137,7 +137,7 @@ Now it's time to create the Btrfs partition on top of LUKS. I'll be creating the
 Name        Size
 =========== ==========
 Local		1 TB
-Main		<no quota>
+Main		*no quota*
 Media		3 TB
 Old		    1.52 TB
 Stuff		2 TB
@@ -152,6 +152,7 @@ TimeMachine	2 TB
     sudo mkdir /mnt/storage
     uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<!uuid:)[0-9a-f-]+$')
     sudo mount UUID=$uuid /mnt/storage
+    sudo btrfs quota enable /mnt/storage
     # Create subvolumes.
     devices=$(set -- /dev/mapper/storage_*; IFS=,; echo "$*" |sed 's /dev device=/dev g')
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
@@ -159,6 +160,14 @@ TimeMachine	2 TB
         sudo mkdir /mnt/storage_$n
         sudo tee -a /etc/fstab <<< "UUID=$uuid /mnt/storage_$n btrfs $devices,subvol=$n 0 2"
     done
+    # Apply quotas.
+    sudo btrfs qgroup limit 1t /mnt/storage/Local
+    sudo btrfs qgroup limit 3t /mnt/storage/Media
+    sudo btrfs qgroup limit 1557g /mnt/storage/Old
+    sudo btrfs qgroup limit 2t /mnt/storage/Stuff
+    sudo btrfs qgroup limit 2t /mnt/storage/Temporary
+    sudo btrfs qgroup limit 2t /mnt/storage/TimeMachine
+    # Mount.
     sudo umount /mnt/storage  # Don't need this anymore.
     sudo mount -a  # Auto-mount everything we added to /etc/fstab.
 
