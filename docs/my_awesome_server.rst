@@ -139,14 +139,25 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
     sudo mkfs.btrfs -L storage -m raid1 -d raid1 /dev/mapper/storage_*  # TODO raid10
     uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<=uuid: )[0-9a-f-]+$')
     devices=$(set -- /dev/mapper/storage_*; IFS=,; echo "$*" |sed 's /dev device=/dev g')
-    sudo tee -a /etc/fstab <<< "UUID=$uuid /mnt/storage btrfs $devices 0 2"
-    sudo mkdir /mnt/storage; sudo mount -a
+    sudo tee -a /etc/fstab <<< "UUID=$uuid /storage btrfs $devices 0 2"
+    sudo mkdir /storage; sudo mount -a
     # Create subvolumes.
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
-        sudo btrfs subvolume create /mnt/storage/$n
+        sudo btrfs subvolume create /storage/$n
     done
 
-Reboot again to make sure ``/mnt/storage`` is mounted.
+Reboot again to make sure ``/storage`` is mounted.
+
+Samba
+=====
+
+* TODO: http://www.coglib.com/~icordasc/blog/2016/12/selinux-and-samba-on-fedora-25-server.html
+
+Alerting
+========
+
+* TODO: btrfs disk failed
+* TODO: btrfs inconsistent data?
 
 References
 ==========
