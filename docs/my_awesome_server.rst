@@ -136,7 +136,7 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
 .. code-block:: bash
 
     # Create the Btrfs top volume.
-    sudo mkfs.btrfs -L storage -m raid1 -d raid1 /dev/mapper/storage_*  # TODO raid10
+    sudo mkfs.btrfs -L storage -m raid10 -d raid10 /dev/mapper/storage_*
     uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<=uuid: )[0-9a-f-]+$')
     devices=$(set -- /dev/mapper/storage_*; IFS=,; echo "$*" |sed 's /dev device=/dev g')
     sudo tee -a /etc/fstab <<< "UUID=$uuid /storage btrfs $devices 0 2"
