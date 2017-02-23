@@ -151,6 +151,11 @@ Reboot again to make sure ``/storage`` is mounted.
 Samba
 =====
 
+.. code-block::
+
+    sudo dnf install samba
+    sudo vim /etc/samba/smb.conf  # Remove all but [global].
+
 * TODO: http://www.coglib.com/~icordasc/blog/2016/12/selinux-and-samba-on-fedora-25-server.html
 
 Alerting
@@ -158,6 +163,7 @@ Alerting
 
 * TODO: btrfs disk failed
 * TODO: btrfs inconsistent data?
+* TODO: imminent disk failure
 
 References
 ==========
