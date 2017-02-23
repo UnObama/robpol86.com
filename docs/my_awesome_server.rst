@@ -151,10 +151,30 @@ Reboot again to make sure ``/storage`` is mounted.
 Samba
 =====
 
-.. code-block:: bash
+Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
 
-    sudo dnf install samba
-    sudo vim /etc/samba/smb.conf  # Remove all but [global].
+.. code-block:: ini
+
+    [global]
+        workgroup = WORKGROUP
+        security = user
+        passdb backend = tdbsam
+
+    [Main]
+        path = /storage/%S
+
+    [Media]
+        copy = Main
+
+    [Old]
+        copy = Main
+
+    [Stuff]
+        copy = Main
+
+    [Temporary]
+        copy = Main
+
 
 * TODO: http://www.coglib.com/~icordasc/blog/2016/12/selinux-and-samba-on-fedora-25-server.html
 
