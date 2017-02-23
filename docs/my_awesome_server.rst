@@ -151,7 +151,7 @@ Reboot again to make sure ``/storage`` is mounted.
 Samba
 =====
 
-.. code-block::
+.. code-block:: bash
 
     sudo dnf install samba
     sudo vim /etc/samba/smb.conf  # Remove all but [global].
