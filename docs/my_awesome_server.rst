@@ -14,6 +14,8 @@ I'll be outlining the steps I took in setting up my current home Linux server. I
 5. Apple Time Machine backup server.
 6. `Metrics <https://github.com/influxdata/chronograf>`_ collector and email alerting.
 7. Tape backup server.
+8. Automated video file transcoder.
+9. Audio/video file ID3/metadata validator.
 
 Hardware
 ========
