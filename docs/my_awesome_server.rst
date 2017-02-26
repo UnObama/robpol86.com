@@ -169,7 +169,7 @@ First we'll install samba and configure users and directories.
 
 .. code-block:: bash
 
-    sudo dnf install samba
+    sudo dnf install samba policycoreutils-python-utils
     sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
     sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
     # Type in password used by Samba clients below. Not Linux password.
@@ -178,6 +178,9 @@ First we'll install samba and configure users and directories.
     sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
     sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
     sudo chown stuff:robpol86 /storage/Stuff
+    mkdir /storage/Temporary/Scanned
+    sudo semanage fcontext -a -t samba_share_t "/storage/(Main|Media|Old|Stuff|Temporary)(/.*)?"
+    sudo restorecon -R -v /storage/{Main,Media,Old,Stuff,Temporary}
 
 Now replace ``/etc/samba/smb.conf`` with:
 
