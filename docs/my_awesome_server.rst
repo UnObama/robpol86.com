@@ -157,13 +157,13 @@ I'll have three Samba users on my server. Each user will have a separate passwor
 as printers may not store them 100% secure and I wouldn't want that to be an attack vector for my server (lifting the
 password from the printer and then logging in and running sudo on my server).
 
-======== ========================================================================================================
+======== ===========================================================================
 User     Description
-======== ========================================================================================================
-robpol86 The main user for my server. Excluding "Stuff" every file/directory in ``/storage`` will be owned by it.
+======== ===========================================================================
+robpol86 The main user for my server. Will own everything besides "Stuff".
 stuff    Separate user for "Stuff" in case I use it for malware testing/etc.
-printer  Used for uploading scanned documents to. Files will be ``setfacl`` to "robpol86" in "Temporary".
-======== ========================================================================================================
+printer  Scanned documents will be put in "Temporary" and ``setfacl`` to "robpol86".
+======== ===========================================================================
 
 Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
 
