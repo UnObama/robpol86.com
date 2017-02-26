@@ -153,16 +153,31 @@ Reboot again to make sure ``/storage`` is mounted.
 Samba
 =====
 
+I'll have three Samba users on my server. Each user will have a separate password in Samba's database since things such
+as printers may not store them 100% secure and I wouldn't want that to be an attack vector for my server (lifting the
+password from the printer and then logging in and running sudo on my server).
+
+======== ========================================================================================================
+User     Description
+======== ========================================================================================================
+robpol86 The main user for my server. Excluding "Stuff" every file/directory in ``/storage`` will be owned by it.
+stuff    Separate user for "Stuff" in case I use it for malware testing/etc.
+printer  Used for uploading scanned documents to. Files will be ``setfacl`` to "robpol86" in "Temporary".
+======== ========================================================================================================
+
 Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
 
 .. code-block:: ini
 
     [global]
-        workgroup = WORKGROUP
-        security = user
+        disable spoolss = yes
+        load printers = no
         passdb backend = tdbsam
+        security = user
+        workgroup = WORKGROUP
 
     [Main]
+        guest ok = no
         path = /storage/%S
 
     [Media]
