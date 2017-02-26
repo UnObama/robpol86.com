@@ -150,6 +150,8 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
 
 Reboot again to make sure ``/storage`` is mounted.
 
+* TODO: stronger permissions.
+
 Samba
 =====
 
@@ -174,7 +176,7 @@ subvolumes (basically just directories from Samba's point of view).
     sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
     sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
     sudo chown stuff:robpol86 /storage/Stuff
-    mkdir /storage/Temporary/Scanned  # Logged in as robpol86.
+    mkdir -m g=rwx /storage/Temporary/Scanned; sudo chgrp printer $_  # Run as robpol86.
 
 Next I'll install Samba, set Samba-specific passwords used by remote clients, and configure SELinux (other Samba guides
 love to disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
@@ -218,7 +220,7 @@ Now replace ``/etc/samba/smb.conf`` with:
     [Temporary]
         copy = Main
 
-    [TemporaryScanned]
+    [Scanned]
         copy = Main
         path = /Storage/Temporary/Scanned
         valid users = printer
