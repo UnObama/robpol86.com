@@ -165,20 +165,26 @@ stuff    Separate user for "Stuff" in case I use it for malware testing/etc.
 printer  Scanned documents will be put in "Temporary" and ``setfacl`` to "robpol86".
 ======== ===========================================================================
 
-First we'll install samba and configure users and directories.
+Before installing anything I'll create additional users as per the table above and set permissions on the Btrfs
+subvolumes (basically just directories from Samba's point of view).
+
+.. code-block:: bash
+
+    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
+    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
+    sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
+    sudo chown stuff:robpol86 /storage/Stuff
+    mkdir /storage/Temporary/Scanned
+
+Next I'll install Samba, set Samba-specific passwords used by remote clients, and configure SELinux (other Samba guides
+love to disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
 
 .. code-block:: bash
 
     sudo dnf install samba policycoreutils-python-utils
-    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
-    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
-    # Type in password used by Samba clients below. Not Linux password.
     sudo smbpasswd -a stuff && sudo smbpasswd -e $_
     sudo smbpasswd -a printer && sudo smbpasswd -e $_
     sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
-    sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
-    sudo chown stuff:robpol86 /storage/Stuff
-    mkdir /storage/Temporary/Scanned
     sudo semanage fcontext -a -t samba_share_t /storage
     sudo semanage fcontext -a -t samba_share_t "/storage/(Main|Media|Old|Stuff|Temporary)(/.*)?"
     sudo restorecon -R -v /storage
