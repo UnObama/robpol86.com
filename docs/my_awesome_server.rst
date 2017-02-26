@@ -192,8 +192,23 @@ Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
     [Temporary]
         copy = Main
 
+Then run:
+
+.. code-block:: bash
+
+    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
+    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
+    # Type in password used by Samba clients below. Not Linux password.
+    sudo smbpasswd -a stuff && sudo smbpasswd -e $_
+    sudo smbpasswd -a printer && sudo smbpasswd -e $_
+    sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
+    sudo systemctl start smb.service
+    sudo systemctl enable smb.service
+    sudo systemctl start nmb.service
+    sudo systemctl enable nmb.service
 
 * TODO: http://www.coglib.com/~icordasc/blog/2016/12/selinux-and-samba-on-fedora-25-server.html
+* TODO: VLAN
 
 Alerting
 ========
