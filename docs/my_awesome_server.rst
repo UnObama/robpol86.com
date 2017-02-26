@@ -165,7 +165,21 @@ stuff    Separate user for "Stuff" in case I use it for malware testing/etc.
 printer  Scanned documents will be put in "Temporary" and ``setfacl`` to "robpol86".
 ======== ===========================================================================
 
-Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
+First we'll install samba and configure users and directories.
+
+.. code-block:: bash
+
+    sudo dnf install samba
+    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
+    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
+    # Type in password used by Samba clients below. Not Linux password.
+    sudo smbpasswd -a stuff && sudo smbpasswd -e $_
+    sudo smbpasswd -a printer && sudo smbpasswd -e $_
+    sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
+    sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
+    sudo chown stuff:robpol86 /storage/Stuff
+
+Now replace ``/etc/samba/smb.conf`` with:
 
 .. code-block:: ini
 
@@ -179,6 +193,7 @@ Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
     [Main]
         guest ok = no
         path = /storage/%S
+        valid users = robpol86
 
     [Media]
         copy = Main
@@ -188,20 +203,20 @@ Run ``sudo dnf install samba`` and replace ``/etc/samba/smb.conf`` with:
 
     [Stuff]
         copy = Main
+        valid users = stuff
 
     [Temporary]
         copy = Main
+
+    [TemporaryScanned]
+        copy = Main
+        path = /Storage/Temporary/Scanned
+        valid users = printer
 
 Then run:
 
 .. code-block:: bash
 
-    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
-    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
-    # Type in password used by Samba clients below. Not Linux password.
-    sudo smbpasswd -a stuff && sudo smbpasswd -e $_
-    sudo smbpasswd -a printer && sudo smbpasswd -e $_
-    sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
     sudo systemctl start smb.service
     sudo systemctl enable smb.service
     sudo systemctl start nmb.service
