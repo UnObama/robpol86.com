@@ -179,8 +179,9 @@ First we'll install samba and configure users and directories.
     sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
     sudo chown stuff:robpol86 /storage/Stuff
     mkdir /storage/Temporary/Scanned
+    sudo semanage fcontext -a -t samba_share_t /storage
     sudo semanage fcontext -a -t samba_share_t "/storage/(Main|Media|Old|Stuff|Temporary)(/.*)?"
-    sudo restorecon -R -v /storage/{Main,Media,Old,Stuff,Temporary}
+    sudo restorecon -R -v /storage
 
 Now replace ``/etc/samba/smb.conf`` with:
 
