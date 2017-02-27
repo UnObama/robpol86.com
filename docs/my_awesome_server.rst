@@ -196,6 +196,7 @@ Now replace ``/etc/samba/smb.conf`` with:
 .. code-block:: ini
 
     [global]
+        access based share enum = yes
         disable spoolss = yes
         load printers = no
         passdb backend = tdbsam
