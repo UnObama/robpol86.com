@@ -151,6 +151,7 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
 Reboot again to make sure ``/storage`` is mounted.
 
 * TODO: stronger permissions.
+* TODO: VLAN.
 
 Samba
 =====
