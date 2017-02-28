@@ -150,7 +150,6 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
 
 Reboot again to make sure ``/storage`` is mounted.
 
-* TODO: stronger permissions.
 * TODO: VLAN.
 
 Samba
@@ -179,7 +178,9 @@ subvolumes (basically just directories from Samba's point of view).
     sudo chown stuff:stuff /storage/Stuff
     sudo chmod 0750 /storage/{Main,Media,Old,Stuff}
     sudo chmod 0751 /storage/Temporary
-    mkdir -m 0775 /storage/Temporary/Scanned; sudo chgrp printer $_  # Run as robpol86.
+    sudo setfacl -d -m u::rwx -m g::rx -m o::- /storage/{Main,Media,Old,Stuff,Temporary}
+    mkdir -m 0770 /storage/Temporary/Scanned; sudo chgrp printer $_  # Run as robpol86.
+    sudo setfacl -d -m u::rwx -m g::rwx -m o::- /storage/Temporary/Scanned
 
 Next I'll install Samba, set Samba-specific passwords used by remote clients, and configure SELinux (other Samba guides
 love to disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
