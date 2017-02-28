@@ -156,7 +156,7 @@ Samba
 =====
 
 I'll have three Samba users on my server. Each user will have a separate password in Samba's database since things such
-as printers may not store them 100% secure and I wouldn't want that to be an attack vector for my server (lifting the
+as printers may not store them 100% securely and I wouldn't want that to be an attack vector for my server (lifting the
 password from the printer and then logging in and running sudo on my server).
 
 ======== ==========================================================================
