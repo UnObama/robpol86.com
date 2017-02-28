@@ -159,13 +159,13 @@ I'll have three Samba users on my server. Each user will have a separate passwor
 as printers may not store them 100% secure and I wouldn't want that to be an attack vector for my server (lifting the
 password from the printer and then logging in and running sudo on my server).
 
-======== ===========================================================================
+======== ==========================================================================
 User     Description
-======== ===========================================================================
+======== ==========================================================================
 robpol86 The main user for my server. Will own everything besides "Stuff".
 stuff    Separate user for "Stuff" in case I use it for malware testing/etc.
-printer  Scanned documents will be put in "Temporary" and ``setfacl`` to "robpol86".
-======== ===========================================================================
+printer  Scanned documents will be put in "Temporary". Also writable by "robpol86".
+======== ==========================================================================
 
 Before installing anything I'll create additional users as per the table above and set permissions on the Btrfs
 subvolumes (basically just directories from Samba's point of view).
@@ -174,6 +174,7 @@ subvolumes (basically just directories from Samba's point of view).
 
     sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
     sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
+    sudo usermod -a -G printer robpol86
     sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
     sudo chown stuff:stuff /storage/Stuff
     sudo chmod 0750 /storage/{Main,Media,Old,Stuff}
@@ -208,9 +209,12 @@ Now replace ``/etc/samba/smb.conf`` with:
         workgroup = WORKGROUP
 
     [Main]
+        create mask = 0640
+        directory mask = 2750
         guest ok = no
         path = /storage/%S
         valid users = robpol86
+        writable = yes
 
     [Media]
         copy = Main
@@ -227,6 +231,8 @@ Now replace ``/etc/samba/smb.conf`` with:
 
     [Scanned]
         copy = Main
+        create mask = 0660
+        directory mask = 2770
         path = /storage/Temporary/Scanned
         valid users = printer
 
