@@ -247,7 +247,6 @@ Then run:
     sudo systemctl start nmb.service
     sudo systemctl enable nmb.service
 
-* TODO: http://www.coglib.com/~icordasc/blog/2016/12/selinux-and-samba-on-fedora-25-server.html
 * TODO: VLAN
 
 Alerting
