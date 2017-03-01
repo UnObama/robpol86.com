@@ -148,7 +148,7 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
         sudo btrfs subvolume create /storage/$n
     done
 
-Reboot again to make sure ``/storage`` is mounted.
+Reboot to make sure ``/storage`` is mounted.
 
 * TODO: VLAN.
 
