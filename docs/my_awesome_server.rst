@@ -45,10 +45,9 @@ While my server has 10GbE copper NICs and I've got a 16 port 10GbE copper manage
 Mac Pro only has dual gigabit NICs. 10GbE copper thunderbolt NICs are too expensive as well.
 
 To make the most of my Mac Pro I'll need to use VLANs. My server will use VLAN tagging and Samba will only listen on the
-VLAN interface in its own subnet. The only other host on this VLAN besides my pfSense box will be my Mac Pro's second
-NIC. This way NIC1 will be free to download data from my gigabit internet connection, whilst NIC2 will be dedicated to
-transfering files to my server's Samba share. That way I can download files from the internet to my server via my Mac
-Pro at gigabit speeds.
+VLAN interface in its own subnet. The only other host on this VLAN will be my Mac Pro's second NIC. This way NIC1 will
+be free to download data from my gigabit internet connection, whilst NIC2 will be dedicated to transfering files to my
+server's Samba share. That way I can download files from the internet to my server via my Mac Pro at gigabit speeds.
 
 VLANs
 -----
@@ -69,8 +68,7 @@ VLANs
 
 .. describe:: VLAN4: NAS
 
-    Used for Samba. Only NIC2 on my Mac Pro and my server (VLAN tagging/trunking) will be on this VLAN. DHCP served by
-    my pfSense box.
+    Used for Samba. Only NIC2 on my Mac Pro and my server (VLAN tagging/trunking) will be on this VLAN.
 
 .. describe:: VLAN5: ONT
 
@@ -86,7 +84,7 @@ Port    Device       VLAN
 ======= ============ ==================
 1       ONT          5
 2       pfSense WAN  5
-3       pfSense LAN  2 (3 and 4 tagged)
+3       pfSense LAN  2 (3 tagged)
 4       Server       2 (4 tagged)
 5       UPS          2
 6       Chromecast   2
