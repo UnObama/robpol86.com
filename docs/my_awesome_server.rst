@@ -120,14 +120,14 @@ Run the following to set LUKS up:
     sudo dnf install cryptsetup btrfs-progs
     sudo sh -c 'umask 0277 && dd if=/dev/random of=/etc/hdd_key bs=1 count=128'
     (set -e; for d in /dev/sd[a-f]; do
+        name=storage_$(lsblk -dno SERIAL $d)
+        (! sudo grep -q "$name" /etc/crypttab)
         sudo fdisk -l $d |grep "Disk $d"
         sudo cryptsetup --key-file /etc/hdd_key --cipher aes-cbc-essiv:sha256 luksFormat $d
-        name=storage_$(lsblk -dno SERIAL $d)
         uuid=$(lsblk -dno UUID $d)
-        [ ! -e /dev/mapper/$name ]
         sudo tee -a /etc/crypttab <<< "$name UUID=$uuid /etc/hdd_key luks"
-        sudo systemctl daemon-reload && sudo systemctl restart cryptsetup.target
     done)
+    sudo systemctl daemon-reload && sudo systemctl restart cryptsetup.target
 
 Make sure all disks are in ``/dev/mapper``.
 
