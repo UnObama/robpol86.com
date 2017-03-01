@@ -88,7 +88,7 @@ Port    Device       VLAN
 4       Server       2 (4 tagged)
 5       UPS          2
 6       Chromecast   2
-7       WiFi AP      2 (3 tagged)
+7       WiFi AP      2 (2+3 tagged)
 8       Desk         2
 9       Mac Pro NIC1 2
 10      Mac Pro NIC2 4
