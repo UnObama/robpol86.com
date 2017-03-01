@@ -222,27 +222,9 @@ VLAN
 
 .. code-block:: bash
 
-    sudo tee /etc/modprobe.d/8021q.conf <<< "modprobe 8021q"
-    sudo cp /etc/sysconfig/network-scripts/ifcfg-eno3{,.4}
+    sudo nmcli con add type vlan ifname vlan4 dev eno3 id 4 ip4 10.168.192.4/24
 
-Then edit ``ifcfg-eno3.4`` with these changes:
-
-.. code-block:: ini
-
-    # Remove UUID.
-    BOOTPROTO=none
-    IPADDR=10.168.192.4
-    NAME=eno3.4
-    NETWORK=10.168.192.0
-    PREFIX=24
-    VLAN=yes
-
-Then run:
-
-.. code-block:: bash
-
-    sudo systemctl restart systemd-modules-load.service
-    sudo systemctl restart NetworkManager
+That's it!
 
 Samba
 =====
