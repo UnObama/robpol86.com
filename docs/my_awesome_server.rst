@@ -197,47 +197,17 @@ love to disable SELinux or set ``samba_export_all_rw`` which is basically the sa
     sudo semanage fcontext -a -t samba_share_t "/storage/(Main|Media|Old|Stuff|Temporary)(/.*)?"
     sudo restorecon -R -v /storage
 
+Then write the following to ``/usr/local/bin/dfree_btrfs``:
+
+.. literalinclude:: _static/dfree_btrfs.sh
+    :language: bash
+
 Now replace ``/etc/samba/smb.conf`` with:
 
-.. code-block:: ini
+.. literalinclude:: _static/smb.conf
+    :language: ini
 
-    [global]
-        access based share enum = yes
-        disable spoolss = yes
-        load printers = no
-        passdb backend = tdbsam
-        security = user
-        workgroup = WORKGROUP
-
-    [Main]
-        create mask = 0640
-        directory mask = 2750
-        guest ok = no
-        path = /storage/%S
-        valid users = robpol86
-        writable = yes
-
-    [Media]
-        copy = Main
-
-    [Old]
-        copy = Main
-
-    [Stuff]
-        copy = Main
-        valid users = stuff
-
-    [Temporary]
-        copy = Main
-
-    [Scanned]
-        copy = Main
-        create mask = 0660
-        directory mask = 2770
-        path = /storage/Temporary/Scanned
-        valid users = printer
-
-Then run:
+Finally run:
 
 .. code-block:: bash
 
