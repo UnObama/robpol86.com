@@ -33,6 +33,66 @@ SAS HBA         HighPoint RocketRAID 2721 4-Port Internal / 4 Port External
 External Tape   *TBD*
 =============== ===========================================================================================
 
+Network
+=======
+
+While my server has 10GbE copper NICs and I've got a 16 port 10GbE copper managed switch at home, my stupid trash can
+Mac Pro only has dual gigabit NICs. 10GbE copper thunderbolt NICs are too expensive as well.
+
+To make the most of my Mac Pro I'll need to use VLANs. My server will use VLAN tagging and Samba will only listen on the
+VLAN interface in its own subnet. The only other host on this VLAN will be my Mac Pro's second NIC. This way NIC1 will
+be free to download data from my gigabit internet connection, whilst NIC2 will be dedicated to transfering files to my
+server's Samba share. That way I can download files from the internet to my server via my Mac Pro at gigabit speeds.
+
+VLANs
+-----
+
+.. describe:: VLAN1: Default
+
+    The default VLAN. Used for managing the switch.
+
+.. describe:: VLAN2: General
+
+    The general VLAN for my home network. Every normal device communicates through it. Includes normal internet traffic.
+    DHCP served by my pfSense box.
+
+.. describe:: VLAN3: Guest
+
+    Only used by the guest WiFi SSID. In case neighbors need to borrow my internet they can use this network, which will
+    be separate from my general network. DHCP served by my pfSense box.
+
+.. describe:: VLAN4: NAS
+
+    Used for my NAS/Samba. Only NIC2 on my Mac Pro and my server (VLAN tagging/trunking) will be on this VLAN. DHCP
+    served by my pfSense box.
+
+.. describe:: VLAN5: ONT
+
+    My gigabit "modem" will be on this VLAN, along with my pfSense box. Instead of plugging in the ONT directly to my
+    pfSense box both will plug into my switch but be on their own VLAN. Easier cable management and if I ever want to
+    get a second gigabit line I can plug in the second ONT into my switch.
+
+Switchports
+-----------
+
+===== ============ ==================
+Port  Device       VLAN
+===== ============ ==================
+1     ONT          5
+2     pfSense WAN  5
+3     pfSense LAN  2 (3 and 4 tagged)
+4     Server       2 (4 tagged)
+5     UPS          2
+6     Chromecast   2
+7     WiFi AP      2 (3 tagged)
+8     Desk         2
+9     Mac Pro NIC1 2
+10    Mac Pro NIC2 4
+11    *empty*      1
+12    *empty*      3
+13-16 *empty*      2
+===== ============ ==================
+
 Operating System
 ================
 
