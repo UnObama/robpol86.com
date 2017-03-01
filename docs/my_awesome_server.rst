@@ -4,6 +4,11 @@
 My Awesome Server
 =================
 
+.. tip::
+
+    This page is still under development. I'll be changing it a lot as I perfect how I'll setup my new server before I
+    "put it in production" in my home.
+
 I've had home servers since I was in high school in 2002. However I've never documented how I set them up before. Here
 I'll be outlining the steps I took in setting up my current home Linux server. It's a general purpose server, acting as:
 
