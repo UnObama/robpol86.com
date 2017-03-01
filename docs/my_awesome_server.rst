@@ -75,23 +75,23 @@ VLANs
 Switchports
 -----------
 
-===== ============ ==================
-Port  Device       VLAN
-===== ============ ==================
-1     ONT          5
-2     pfSense WAN  5
-3     pfSense LAN  2 (3 and 4 tagged)
-4     Server       2 (4 tagged)
-5     UPS          2
-6     Chromecast   2
-7     WiFi AP      2 (3 tagged)
-8     Desk         2
-9     Mac Pro NIC1 2
-10    Mac Pro NIC2 4
-11    *empty*      1
-12    *empty*      3
-13-16 *empty*      2
-===== ============ ==================
+======= ============ ==================
+Port    Device       VLAN
+======= ============ ==================
+1       ONT          5
+2       pfSense WAN  5
+3       pfSense LAN  2 (3 and 4 tagged)
+4       Server       2 (4 tagged)
+5       UPS          2
+6       Chromecast   2
+7       WiFi AP      2 (3 tagged)
+8       Desk         2
+9       Mac Pro NIC1 2
+10      Mac Pro NIC2 4
+11      *empty*      1
+12      *empty*      3
+13-16   *empty*      2
+======= ============ ==================
 
 Operating System
 ================
