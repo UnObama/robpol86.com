@@ -211,6 +211,7 @@ Finally run:
 
 .. code-block:: bash
 
+    sudo chmod +x /usr/local/bin/dfree_btrfs
     sudo firewall-cmd --permanent --add-service=samba
     sudo systemctl restart firewalld.service
     sudo systemctl start smb.service
