@@ -147,8 +147,17 @@ Then run:
 You should receive both emails in your personal email account. If not make sure the numbers in your SparkPost's
 dashboard's usage report have increased.
 
+VLAN
+----
+
+.. code-block:: bash
+
+    sudo nmcli con add type vlan ifname vlan4 dev eno3 id 4 ip4 10.168.192.4/24
+
+That's it!
+
 Docker
-======
+------
 
 I'll be making heavy use of Docker on my server. Fedora ships with a forked version of Docker. I'd rather run the latest
 "real" Docker so I ran these commands:
@@ -214,15 +223,6 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
     sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 
 Reboot to make sure ``/storage`` is mounted.
-
-VLAN
-====
-
-.. code-block:: bash
-
-    sudo nmcli con add type vlan ifname vlan4 dev eno3 id 4 ip4 10.168.192.4/24
-
-That's it!
 
 Samba
 =====
