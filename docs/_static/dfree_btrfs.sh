@@ -15,12 +15,14 @@ set -e  # Exit script if a command fails.
 set -u  # Treat unset variables as errors and exit immediately.
 set -o pipefail  # Exit script if pipes fail instead of just the last program.
 
+BLOCK_SIZE=1024
+
 # First get total size from df.
-total=$(df $1 |tail -1 |awk '{print $2}')
+TOTAL=$(df -k $1 |tail -1 |awk '{print $2}')
 
 # Then get free (estimated) from btrfs fi usage.
-available=$(btrfs fi usage -k $1 2>/dev/null |grep 'Free (estimated)' |awk '{print $3}')
-available=${available::-6}  # Trim ".00KiB" from end.
+AVAILABLE=$(btrfs fi usage -k $1 2>/dev/null |grep 'Free (estimated)' |awk '{print $3}')
+AVAILABLE=${AVAILABLE::-6}  # Trim ".00KiB" from end.
 
 # Print.
-echo "$total $available"
+echo "$TOTAL $AVAILABLE $BLOCK_SIZE"
