@@ -215,8 +215,6 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
 
 Reboot to make sure ``/storage`` is mounted.
 
-* TODO: VLAN.
-
 VLAN
 ====
 
@@ -291,8 +289,6 @@ Finally run:
     sudo systemctl enable smb.service
     sudo systemctl start nmb.service
     sudo systemctl enable nmb.service
-
-* TODO: VLAN
 
 Alerting
 ========
