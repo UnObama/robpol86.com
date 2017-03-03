@@ -306,9 +306,18 @@ root emails to my real email address.
 
     @hourly journalctl --since="1 hour ago" --priority=warning --quiet
 
+smartd
+------
+
+For failing hard disks alerts run:
+
+.. code-block:: bash
+
+    sudo dnf install smartmontools
+    sudo systemctl start smartd
+
 * TODO: btrfs disk failed
 * TODO: btrfs inconsistent data?
-* TODO: imminent disk failure
 
 References
 ==========
