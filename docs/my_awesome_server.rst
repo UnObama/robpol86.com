@@ -220,7 +220,6 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
         sudo btrfs subvolume create /storage/$n
     done
-    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 
 Reboot to make sure ``/storage`` is mounted.
 
@@ -278,6 +277,11 @@ Now replace ``/etc/samba/smb.conf`` with:
 .. literalinclude:: _static/smb.conf
     :language: ini
 
+**Before starting Samba** I found that I had to edit its ssytemd service unit file. There was a race condition during
+boot where NetworkManager has not yet assigned my VLAN interface's static IP. Samba tries to bind to the IP of the
+interface and runs into the error "bind failed on port 139 socket_addr = 10.168.192.4". I fixed it by editing
+``/usr/lib/systemd/system/nmb.service`` and appending ``network-online.target`` to ``After=``.
+
 Finally run:
 
 .. code-block:: bash
@@ -307,7 +311,7 @@ root emails to my real email address.
 .. code-block:: bash
 
     @hourly journalctl --since="1 hour ago" --priority=warning --quiet
-    @monthly btrfs scrub start -Bd /storage
+    @monthly /usr/sbin/btrfs scrub start -Bd /storage
 
 References
 ==========
