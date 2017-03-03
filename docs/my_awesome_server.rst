@@ -279,8 +279,14 @@ Now replace ``/etc/samba/smb.conf`` with:
 
 **Before starting Samba** I found that I had to edit its ssytemd service unit file. There was a race condition during
 boot where NetworkManager has not yet assigned my VLAN interface's static IP. Samba tries to bind to the IP of the
-interface and runs into the error "bind failed on port 139 socket_addr = 10.168.192.4". I fixed it by editing
-``/usr/lib/systemd/system/nmb.service`` and appending ``network-online.target`` to ``After=``.
+interface and runs into the error "bind failed on port 139 socket_addr = 10.168.192.4".
+
+Run ``sudo systemctl edit nmb.service``, it will open up an empty file. Populate that with:
+
+.. code-block:: ini
+
+    [Unit]
+    After=syslog.target network.target network-online.target
 
 Finally run:
 
