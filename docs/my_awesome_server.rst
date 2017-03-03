@@ -214,7 +214,7 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
     # Create the Btrfs top volume.
     sudo mkfs.btrfs -L storage -m raid10 -d raid10 /dev/mapper/storage_*
     uuid=$(sudo btrfs filesystem show storage |grep -Po '(?<=uuid: )[0-9a-f-]+$')
-    sudo tee -a /etc/fstab <<< "UUID=$uuid /storage btrfs defaults 0 2"
+    sudo tee -a /etc/fstab <<< "UUID=$uuid /storage btrfs autodefrag 0 2"
     sudo mkdir /storage; sudo mount -a
     # Create subvolumes.
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
@@ -296,8 +296,10 @@ Alerting
 I want everything I would normally check periodically on my server to be emailed to me instead. This will involve simple
 cron jobs and more complicated emails derived from metrics.
 
-cron
-----
+.. code-block:: bash
+
+    sudo dnf install smartmontools
+    sudo systemctl start smartd
 
 Add these to the **root** crontab. The email configuration from earlier in this document will take care of forwarding
 root emails to my real email address.
@@ -305,19 +307,7 @@ root emails to my real email address.
 .. code-block:: bash
 
     @hourly journalctl --since="1 hour ago" --priority=warning --quiet
-
-smartd
-------
-
-For failing hard disks alerts run:
-
-.. code-block:: bash
-
-    sudo dnf install smartmontools
-    sudo systemctl start smartd
-
-* TODO: btrfs disk failed
-* TODO: btrfs inconsistent data?
+    @monthly btrfs scrub start -Bd /storage
 
 References
 ==========
