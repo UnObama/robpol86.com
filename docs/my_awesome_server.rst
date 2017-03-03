@@ -302,9 +302,9 @@ cron
 Add these to the **root** crontab. The email configuration from earlier in this document will take care of forwarding
 root emails to my real email address.
 
-.. code-block:: text
+.. code-block:: bash
 
-    @hourly journalctl --since="$(date '+\%Y-\%m-\%d \%H:\%M:\%S' -d '1 hour ago')" --priority=warning --quiet
+    @hourly journalctl --since="1 hour ago" --priority=warning --quiet
 
 * TODO: btrfs disk failed
 * TODO: btrfs inconsistent data?
