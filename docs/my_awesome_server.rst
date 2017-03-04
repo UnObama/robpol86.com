@@ -171,6 +171,8 @@ I'll be making heavy use of Docker on my server. Fedora ships with a forked vers
     sudo systemctl start docker
     sudo systemctl enable docker.service
     sudo docker run hello-world
+    url="https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)"
+    sudo curl -L $url -o /usr/local/bin/docker-compose; sudo chmod +x $_
 
 LUKS and Btrfs
 ==============
@@ -319,6 +321,16 @@ root emails to my real email address.
 
     @hourly journalctl --since="1 hour ago" --priority=warning --quiet
     @monthly /usr/sbin/btrfs scrub start -Bd /storage
+
+Setup InfluxDB and friends:
+
+.. code-block:: bash
+
+    sudo mkdir -p /opt/influxdb; sudo git clone https://github.com/Robpol86/influxdb.git $_
+    cd /opt/influxdb; sudo /usr/local/bin/docker-compose up -d
+    sudo firewall-cmd --add-port=8086/tcp --permanent
+    sudo firewall-cmd --add-port=8083/tcp --permanent
+    sudo systemctl restart firewalld.service
 
 References
 ==========
