@@ -44,10 +44,10 @@ Network
 While my server has 10GbE copper NICs and I've got a 16 port 10GbE copper managed switch at home, my stupid trash can
 Mac Pro only has dual gigabit NICs. 10GbE copper thunderbolt NICs are too expensive as well.
 
-To make the most of my Mac Pro I'll need to use VLANs. My server will use VLAN tagging and Samba will only listen on the
-VLAN interface in its own subnet. The only other host on this VLAN will be my Mac Pro's second NIC. This way NIC1 will
+To make the most of my Mac Pro I'll need to use VLANs. My server will use VLAN tagging and Samba will also listen on the
+VLAN interface (separate subnet). The only other host on this VLAN will be my Mac Pro's second NIC. This way NIC1 will
 be free to download data from my gigabit internet connection, whilst NIC2 will be dedicated to transfering files to my
-server's Samba share. That way I can download files from the internet to my server via my Mac Pro at gigabit speeds.
+server's Samba share. This lets me download files from the internet to my server via my Mac Pro at gigabit speeds.
 
 VLANs
 -----
@@ -280,23 +280,13 @@ Now replace ``/etc/samba/smb.conf`` with:
 .. literalinclude:: _static/smb.conf
     :language: ini
 
-**Before starting Samba** I found that I had to edit its ssytemd service unit file. There was a race condition during
-boot where NetworkManager has not yet assigned my VLAN interface's static IP. Samba tries to bind to the IP of the
-interface and runs into the error "bind failed on port 139 socket_addr = 10.168.192.4".
-
-Run ``sudo systemctl edit nmb.service``, it will open up an empty file. Populate that with:
-
-.. code-block:: ini
-
-    [Unit]
-    After=syslog.target network.target network-online.target
-
-Finally run:
+Finally run the following. Add firewall rules to force my OS X host to use the NAS VLAN for Samba.
 
 .. code-block:: bash
 
     sudo chmod +x /usr/local/bin/dfree_btrfs
     sudo firewall-cmd --permanent --add-service=samba
+    sudo firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=10.192.168.20 service name=samba drop"
     sudo systemctl restart firewalld.service
     sudo systemctl start smb.service
     sudo systemctl enable smb.service
@@ -328,8 +318,7 @@ Setup InfluxDB and friends:
 
     sudo mkdir -p /opt/influxdb; sudo git clone https://github.com/Robpol86/influxdb.git $_
     cd /opt/influxdb; sudo /usr/local/bin/docker-compose up -d
-    sudo firewall-cmd --add-port=8086/tcp --permanent
-    sudo firewall-cmd --add-port=8083/tcp --permanent
+    sudo firewall-cmd --permanent --add-port=8086/tcp
     sudo systemctl restart firewalld.service
 
 References
