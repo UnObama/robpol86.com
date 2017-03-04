@@ -254,8 +254,8 @@ subvolumes (basically just directories from Samba's point of view).
     sudo chmod 0750 /storage/{Main,Media,Old,Stuff}
     sudo chmod 0751 /storage/Temporary
     sudo setfacl -d -m u::rwx -m g::rx -m o::- /storage/{Main,Media,Old,Stuff,Temporary}
-    mkdir -m 0770 /storage/Temporary/Scanned; sudo chgrp printer $_  # Run as robpol86.
-    sudo setfacl -d -m u::rwx -m g::rwx -m o::- /storage/Temporary/Scanned
+    mkdir -m 0770 /storage/Temporary/Printer; sudo chgrp printer $_  # Run as robpol86.
+    sudo setfacl -d -m u::rwx -m g::rwx -m o::- /storage/Temporary/Printer
 
 Next I'll install Samba, set Samba-specific passwords used by remote clients, and configure SELinux (other Samba guides
 love to disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
