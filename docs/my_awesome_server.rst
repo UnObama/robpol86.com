@@ -156,24 +156,6 @@ VLAN
 
 That's it!
 
-Docker
-------
-
-I'll be making heavy use of Docker on my server. Fedora ships with a forked version of Docker. I'd rather run the latest
-"real" Docker so I ran these commands:
-
-.. code-block:: bash
-
-    sudo dnf -y remove docker docker-common container-selinux docker-selinux
-    sudo dnf config-manager --add-repo https://docs.docker.com/engine/installation/linux/repo_files/fedora/docker.repo
-    sudo dnf makecache fast
-    sudo dnf install docker-engine
-    sudo systemctl start docker
-    sudo systemctl enable docker.service
-    sudo docker run hello-world
-    url="https://github.com/docker/compose/releases/download/1.11.2/docker-compose-$(uname -s)-$(uname -m)"
-    sudo curl -L $url -o /usr/local/bin/docker-compose; sudo chmod +x $_
-
 LUKS and Btrfs
 ==============
 
@@ -312,14 +294,8 @@ root emails to my real email address.
     @hourly journalctl --since="1 hour ago" --priority=warning --quiet
     @monthly /usr/sbin/btrfs scrub start -Bd /storage
 
-Setup InfluxDB and friends:
-
-.. code-block:: bash
-
-    sudo mkdir -p /opt/influxdb; sudo git clone https://github.com/Robpol86/influxdb.git $_
-    cd /opt/influxdb; sudo /usr/local/bin/docker-compose up -d
-    sudo firewall-cmd --permanent --add-port=8086/tcp
-    sudo systemctl restart firewalld.service
+Setup InfluxDB and friends by following this guide (takes care of installing Docker too):
+https://github.com/Robpol86/influxdb
 
 References
 ==========
