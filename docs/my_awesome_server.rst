@@ -283,8 +283,10 @@ cron jobs and more complicated emails derived from metrics.
 
 .. code-block:: bash
 
-    sudo dnf install smartmontools
+    sudo dnf install smartmontools ipmitool
     sudo systemctl start smartd
+    sudo tee /etc/modules-load.d/ipmi_devintf.conf <<< ipmi_devintf
+    sudo systemctl restart systemd-modules-load
 
 Add these to the **root** crontab. The email configuration from earlier in this document will take care of forwarding
 root emails to my real email address.
