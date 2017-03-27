@@ -295,7 +295,7 @@ root emails to my real email address.
     @monthly /usr/sbin/btrfs scrub start -Bd /storage
 
 Setup InfluxDB and friends by following this guide (takes care of installing Docker too):
-https://github.com/Robpol86/influxdb/wiki
+https://robpol86.github.io/influxdb/
 
 References
 ==========
