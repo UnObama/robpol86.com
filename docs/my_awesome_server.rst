@@ -275,8 +275,8 @@ Finally run the following. Add firewall rules to force my OS X host to use the N
     sudo systemctl start nmb.service
     sudo systemctl enable nmb.service
 
-Alerting
-========
+Monitoring/Graphing/Alerting
+============================
 
 I want everything I would normally check periodically on my server to be emailed to me instead. This will involve simple
 cron jobs and more complicated emails derived from metrics.
