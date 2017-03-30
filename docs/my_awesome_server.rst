@@ -297,6 +297,23 @@ root emails to my real email address.
 Setup InfluxDB and friends by following this guide (takes care of installing Docker too):
 https://robpol86.github.io/influxdb/
 
+Plex
+====
+
+To give Plex access to my media I'll use sticky bits (setgid) to grant read access to my files to the plex group. I'll
+also run Plex within Docker.
+
+.. code-block:: bash
+
+    sudo useradd -M -s /sbin/nologin plex
+    sudo chmod -R g+s /storage/Media && sudo chgrp -R plex /storage/Media
+    sudo docker run -d --name plex -h $HOSTNAME \
+        -e "ADVERTISE_IP=http://$HOSTNAME:32400/" \
+        -e "ALLOWED_NETWORKS=10.192.168.0/24" \
+        -e "TZ=America/Los_Angeles" \
+        -e "VERSION=latest" \
+        plexinc/pms-docker
+
 References
 ==========
 
