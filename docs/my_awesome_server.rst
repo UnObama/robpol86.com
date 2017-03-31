@@ -310,6 +310,8 @@ also run Plex within Docker.
     sudo docker run -d --name plex --restart always -h $HOSTNAME \
         -e "ADVERTISE_IP=http://$HOSTNAME:32400/" \
         -e "ALLOWED_NETWORKS=10.192.168.0/24" \
+        -e "PLEX_GID=$(id plex -g)" \
+        -e "PLEX_UID=$(id plex -u)" \
         -e "TZ=$(realpath --relative-to /usr/share/zoneinfo /etc/localtime)" \
         -e "VERSION=latest" \
         -p 1900:1900/udp \
@@ -330,7 +332,11 @@ also run Plex within Docker.
     done
     sudo systemctl restart firewalld.service
 
-Then browse to http://filesrv.rob86.net:32400/web/index.html to do the initial setup.
+Then browse to http://filesrv.rob86.net:32400/web/index.html to do the initial setup. Enable settings such as:
+
+* Update my library automatically
+* Run a partial scan when changes are detected
+* Update my library periodically
 
 References
 ==========
