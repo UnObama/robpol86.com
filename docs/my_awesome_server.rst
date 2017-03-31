@@ -307,11 +307,23 @@ also run Plex within Docker.
 
     sudo useradd -M -s /sbin/nologin plex
     sudo chmod -R g+s /storage/Media && sudo chgrp -R plex /storage/Media
-    sudo docker run -d --name plex -h $HOSTNAME \
+    sudo docker run -d --name plex --restart always -h $HOSTNAME \
         -e "ADVERTISE_IP=http://$HOSTNAME:32400/" \
         -e "ALLOWED_NETWORKS=10.192.168.0/24" \
-        -e "TZ=America/Los_Angeles" \
+        -e "TZ=$(realpath --relative-to /usr/share/zoneinfo /etc/localtime)" \
         -e "VERSION=latest" \
+        -p 1900:1900/udp \
+        -p 3005:3005/tcp \
+        -p 32400:32400/tcp \
+        -p 32410:32410/udp \
+        -p 32412:32412/udp \
+        -p 32413:32413/udp \
+        -p 32414:32414/udp \
+        -p 32469:32469/tcp \
+        -p 8324:8324/tcp \
+        -v /storage/Local/plex/config:/config \
+        -v /storage/Media:/data:ro \
+        -v /transcode \
         plexinc/pms-docker
 
 References
