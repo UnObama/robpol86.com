@@ -306,7 +306,7 @@ also run Plex within Docker.
 .. code-block:: bash
 
     sudo useradd -M -s /sbin/nologin plex
-    sudo chmod -R g+s /storage/Media && sudo chgrp -R plex /storage/Media
+    sudo chmod -R g+s /storage/Media && sudo chgrp -R plex $_
     sudo docker run -d --name plex --restart always -h $HOSTNAME \
         -e "ADVERTISE_IP=http://$HOSTNAME:32400/" \
         -e "ALLOWED_NETWORKS=10.192.168.0/24" \
