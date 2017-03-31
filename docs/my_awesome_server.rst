@@ -325,7 +325,7 @@ also run Plex within Docker.
         -v /storage/Media:/data:ro \
         -v /transcode \
         plexinc/pms-docker
-    for p in $(sudo docker inspect plex |jq -r '.[0].NetworkSettings.Ports |keys |join(" ")'); do
+    for p in $(sudo docker inspect plex |jq -r '.[].NetworkSettings.Ports |keys |join(" ")'); do
         sudo firewall-cmd --permanent --add-port=$p
     done
     sudo systemctl restart firewalld.service
