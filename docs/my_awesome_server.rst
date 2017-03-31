@@ -325,6 +325,12 @@ also run Plex within Docker.
         -v /storage/Media:/data:ro \
         -v /transcode \
         plexinc/pms-docker
+    for p in 1900/udp 3005/tcp 32400/tcp 32410/udp 32412/udp 32413/udp 32414/udp 32469/tcp 8324/tcp; do
+        sudo firewall-cmd --permanent --add-port=$p
+    done
+    sudo systemctl restart firewalld.service
+
+Then browse to http://filesrv.rob86.net:32400/web/index.html to do the initial setup.
 
 References
 ==========
