@@ -228,8 +228,8 @@ subvolumes (basically just directories from Samba's point of view).
 
 .. code-block:: bash
 
-    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin stuff
-    sudo useradd -p $(openssl rand 32 |openssl passwd -1 -stdin) -M -s /sbin/nologin printer
+    sudo useradd -p "$(openssl rand 32 |openssl passwd -1 -stdin)" -M -s /sbin/nologin stuff
+    sudo useradd -p "$(openssl rand 32 |openssl passwd -1 -stdin)" -M -s /sbin/nologin printer
     sudo usermod -a -G printer robpol86
     sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
     sudo chown stuff:stuff /storage/Stuff
