@@ -33,7 +33,7 @@ Case            `Travla T2241`_ dual mini-ITX with `Seasonic 250 watt`_ power su
 Motherboard/CPU `Supermicro X10SDV-TLN4F-O`_ with Xeon D-1541
 Memory          Kingston KVR24R17D8K4/64 (64GB)
 M.2 SSD         Samsung 960 PRO 512GB
-Storage HDDs    6x Seagate 10TB IronWolf Pro (ST10000NE0004)
+Storage HDDs    4x Seagate 10TB IronWolf Pro (ST10000NE0004)
 SAS HBA         HighPoint RocketRAID 2721 4-Port Internal / 4 Port External
 External Tape   *TBD*
 =============== ===========================================================================================
@@ -166,7 +166,7 @@ I also want to use Btrfs for RAID10 (RAID5 is a bad idea with 6x10TB and RAID6 s
 vs RAID10 stressing just one other drive). Since encryption isn't supported by Btrfs at this time I need to use LUKS.
 Since I want to use LUKS with Btrfs my only option is to LUKS the drives first and then use Btrfs RAID ontop of them.
 
-To avoid having to type in the same password six times on boot I'm instead using a random key file stored in /etc. It's
+To avoid having to type in the same password four times on boot I'm instead using a random key file stored in /etc. It's
 less safe but I'm encrypting my drives in case my server gets stolen. So since I'm using a traditional LUKS password on
 my main SSD this key file will be encrypted anyway.
 
