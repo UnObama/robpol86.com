@@ -349,7 +349,10 @@ Then browse to http://filesrv.rob86.net:32400/web/index.html to do the initial s
 BD/DVD Backups
 ==============
 
-Follow the README at: https://hub.docker.com/r/robpol86/makemkv/
+Follow the README at https://hub.docker.com/r/robpol86/makemkv/ with some changes:
+
+1. Replace ``~/MakeMKV`` with ``/storage/Temporary/MakeMKV``
+2. Use ``robpol86`` UID and GIDs
 
 References
 ==========
