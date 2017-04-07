@@ -351,7 +351,7 @@ BD/DVD Backups
 
 Follow the README at https://hub.docker.com/r/robpol86/makemkv/ with some changes:
 
-1. Replace ``~/MakeMKV`` with ``/storage/Temporary/MakeMKV``
+1. Store MKVs in ``/storage/Temporary/MakeMKV``
 2. Use ``robpol86`` UID and GIDs
 
 References
