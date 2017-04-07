@@ -206,7 +206,6 @@ Now it's time to create the Btrfs partition on top of LUKS as well as Btrfs subv
     for n in Local Main Media Old Stuff Temporary TimeMachine; do
         sudo btrfs subvolume create /storage/$n
     done
-    sudo grub2-mkconfig -o /boot/grub2/grub.cfg
 
 Reboot to make sure ``/storage`` is mounted.
 
