@@ -179,7 +179,7 @@ Run the following to set LUKS up:
 .. code-block:: bash
 
     sudo dnf install cryptsetup btrfs-progs
-    (set -e; for d in /dev/sd[b-e]; do
+    (set -ex; for d in /dev/sd[b-e]; do
         name=storage_$(lsblk -dno SERIAL $d |grep . || basename $d)
         (! sudo grep -q "$name" /etc/crypttab)
         sudo fdisk -l $d |grep "Disk $d"
