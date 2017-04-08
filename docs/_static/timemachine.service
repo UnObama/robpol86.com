@@ -11,4 +11,9 @@
    <port>0</port>
    <txt-record>model=RackMac</txt-record>
  </service>
+ <service>
+   <type>_adisk._tcp</type>
+   <port>0</port>
+   <txt-record>dk0=adVN=TimeMachine,adVF=0x82</txt-record>
+ </service>
 </service-group>
