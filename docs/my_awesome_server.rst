@@ -240,12 +240,29 @@ subvolumes (basically just directories from Samba's point of view).
     mkdir -m 0770 /storage/Temporary/Printer; sudo chgrp printer $_  # Run as robpol86.
     sudo setfacl -d -m u::rwx -m g::rwx -m o::- /storage/Temporary/Printer
 
-Next I'll install Samba, set Samba-specific passwords used by remote clients, and configure SELinux (other Samba guides
-love to disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
+Normally I'd then install Samba the usual way with dnf. However at this time support for Apple's Time Machine `isn't`_
+yet `available`_. My workaround is to build a custom RPM with the ``F_FULLSYNC`` feature patched in until Samba
+officially supports it.
 
 .. code-block:: bash
 
-    sudo dnf install samba policycoreutils-python-utils
+    sudo dnf install @development-tools fedora-packager
+    fedpkg co -ab f25 samba && cd $_
+    fedpkg sources
+    curl -L https://github.com/samba-team/samba/pull/64.patch -o samba-fullsync.patch
+    # Edit samba.spec to add: Patch1: samba-fullsync.patch
+    fedpkg prep
+    sudo dnf builddep --spec samba.spec
+    fedpkg local
+    sudo dnf install noarch/samba-common-4.5.8* \
+        x86_64/{libwbclient,samba{,-libs,-client-libs,-common{-libs,-tools}}}-4.5.8*
+
+Next I'll install set Samba-specific passwords used by remote clients and configure SELinux (other Samba guides love to
+disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
+
+.. code-block:: bash
+
+    sudo dnf install policycoreutils-python-utils
     sudo smbpasswd -a stuff && sudo smbpasswd -e $_
     sudo smbpasswd -a printer && sudo smbpasswd -e $_
     sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
@@ -275,6 +292,9 @@ Finally run the following. Add firewall rules to force my OS X host to use the N
     sudo systemctl enable smb.service
     sudo systemctl start nmb.service
     sudo systemctl enable nmb.service
+
+.. _isn't: https://bugzilla.samba.org/show_bug.cgi?id=12380
+.. _available: https://github.com/samba-team/samba/pull/64
 
 Monitoring/Graphing/Alerting
 ============================
