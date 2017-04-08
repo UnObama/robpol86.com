@@ -255,7 +255,7 @@ officially supports it.
     sudo dnf builddep --spec samba.spec
     fedpkg local
     sudo dnf install noarch/samba-common-4.5.8* \
-        x86_64/{libwbclient,samba{,-libs,-client-libs,-common{-libs,-tools}}}-4.5.8*
+        x86_64/{libwbclient,libsmbclient,samba{,-libs,-client,-client-libs,-common{-libs,-tools}}}-4.5.8*
 
 Next I'll install set Samba-specific passwords used by remote clients and configure SELinux (other Samba guides love to
 disable SELinux or set ``samba_export_all_rw`` which is basically the same as disabling SELinux).
