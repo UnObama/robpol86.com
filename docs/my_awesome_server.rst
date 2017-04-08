@@ -13,12 +13,12 @@ I've had home servers since I was in high school in 2002. However I've never doc
 I'll be outlining the steps I took in setting up my current home Linux server. It's a general purpose server, acting as:
 
 1. A file server for all of my media/backups/etc.
-2. `Docker <https://www.docker.com/>`_ server.
-3. `Metrics <https://robpol86.github.io/influxdb/>`_ collecting and email alerting.
-4. `Plex <https://www.plex.tv/>`_ media server.
-5. Automated Bluray/DVD ripping (backups) station.
-6. Automated video file transcoder.
-7. Apple Time Machine backup server.
+2. Apple Time Machine backup server.
+3. `Docker <https://www.docker.com/>`_ server.
+4. `Metrics <https://robpol86.github.io/influxdb/>`_ collecting and email alerting.
+5. `Plex <https://www.plex.tv/>`_ media server.
+6. Automated Bluray/DVD ripping (backups) station.
+7. Automated video file transcoder.
 8. Tape backup server.
 9. Audio/video file ID3/metadata validator.
 
