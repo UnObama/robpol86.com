@@ -232,11 +232,11 @@ subvolumes (basically just directories from Samba's point of view).
     sudo useradd -p "$(openssl rand 32 |openssl passwd -1 -stdin)" -M -s /sbin/nologin stuff
     sudo useradd -p "$(openssl rand 32 |openssl passwd -1 -stdin)" -M -s /sbin/nologin printer
     sudo usermod -a -G printer robpol86
-    sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary}
+    sudo chown robpol86:robpol86 /storage/{Main,Media,Old,Temporary,TimeMachine}
     sudo chown stuff:stuff /storage/Stuff
-    sudo chmod 0750 /storage/{Main,Media,Old,Stuff}
+    sudo chmod 0750 /storage/{Main,Media,Old,Stuff,TimeMachine}
     sudo chmod 0751 /storage/Temporary
-    sudo setfacl -d -m u::rwx -m g::rx -m o::- /storage/{Main,Media,Old,Stuff,Temporary}
+    sudo setfacl -d -m u::rwx -m g::rx -m o::- /storage/{Main,Media,Old,Stuff,Temporary,TimeMachine}
     mkdir -m 0770 /storage/Temporary/Printer; sudo chgrp printer $_  # Run as robpol86.
     sudo setfacl -d -m u::rwx -m g::rwx -m o::- /storage/Temporary/Printer
 
@@ -267,7 +267,7 @@ disable SELinux or set ``samba_export_all_rw`` which is basically the same as di
     sudo smbpasswd -a printer && sudo smbpasswd -e $_
     sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
     sudo semanage fcontext -a -t samba_share_t /storage
-    sudo semanage fcontext -a -t samba_share_t "/storage/(Main|Media|Old|Stuff|Temporary)(/.*)?"
+    sudo semanage fcontext -a -t samba_share_t "/storage/(Main|Media|Old|Stuff|Temporary|TimeMachine)(/.*)?"
     sudo restorecon -R -v /storage
 
 Then write the following to ``/usr/local/bin/dfree_btrfs``:
