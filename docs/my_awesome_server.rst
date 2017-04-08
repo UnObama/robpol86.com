@@ -262,7 +262,7 @@ disable SELinux or set ``samba_export_all_rw`` which is basically the same as di
 
 .. code-block:: bash
 
-    sudo dnf install policycoreutils-python-utils
+    sudo dnf install avahi policycoreutils-python-utils
     sudo smbpasswd -a stuff && sudo smbpasswd -e $_
     sudo smbpasswd -a printer && sudo smbpasswd -e $_
     sudo smbpasswd -a robpol86 && sudo smbpasswd -e $_
@@ -273,6 +273,11 @@ disable SELinux or set ``samba_export_all_rw`` which is basically the same as di
 Then write the following to ``/usr/local/bin/dfree_btrfs``:
 
 .. literalinclude:: _static/dfree_btrfs.sh
+    :language: bash
+
+And write the following to ``/etc/avahi/services/timemachine.service``:
+
+.. literalinclude:: _static/timemachine.service
     :language: bash
 
 Now replace ``/etc/samba/smb.conf`` with:
@@ -288,10 +293,8 @@ Finally run the following. Add firewall rules to force my OS X host to use the N
     sudo firewall-cmd --permanent --add-service=samba
     sudo firewall-cmd --permanent --add-rich-rule="rule family=ipv4 source address=10.192.168.20 service name=samba drop"
     sudo systemctl restart firewalld.service
-    sudo systemctl start smb.service
-    sudo systemctl enable smb.service
-    sudo systemctl start nmb.service
-    sudo systemctl enable nmb.service
+    sudo systemctl start smb.service nmb.service avahi-daemon.service
+    sudo systemctl enable smb.service nmb.service avahi-daemon.service
 
 .. _isn't: https://bugzilla.samba.org/show_bug.cgi?id=12380
 .. _available: https://github.com/samba-team/samba/pull/64
