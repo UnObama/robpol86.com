@@ -8,15 +8,14 @@ set -e  # Exit script if a command fails.
 set -u  # Treat unset variables as errors and exit immediately.
 set -o pipefail  # Exit script if pipes fail instead of just the last program.
 
-declare -A json
-
 # Iterate journalctl lines.
 journalctl --since="1 hour ago" --priority=info -o json |while read -r line; do
+    declare -A json  # Scoped in piped while loop.
+
     # Read JSON into bash associative array.
-    json=()
-    (jq -r "to_entries|map(\"\(.key)=\(.value)\")|.[]" <<< "$line") |while IFS="=" read -r key value; do
+    while IFS="=" read -r key value; do
         json["$key"]="$value"
-    done
+    done < <(jq -r "to_entries|map(\"\(.key)=\(.value)\")|.[]" <<< "$line")
 
     # Print.
     output=${json["__REALTIME_TIMESTAMP"]}
