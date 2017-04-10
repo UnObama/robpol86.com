@@ -19,7 +19,7 @@ journalctl --since="1 hour ago" --priority=info -o json |while read -r line; do
 
     # Print.
     output=$(date -d @${json['__REALTIME_TIMESTAMP']:0:-6} '+%b %d %T')
-    output+=" ${json['_HOSTNAME']}"
-    output+=" ${json['_TRANSPORT']}[${json['_PID']}]"
+    output+=" ${json['_HOSTNAME']} ${json['_TRANSPORT']}[${json['_PID']}]:"
+    output+=" ${json['MESSAGE']}"
     echo "$output"
 done
