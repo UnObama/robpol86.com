@@ -101,7 +101,7 @@ Port    Device       VLAN
 11      *empty*      1
 12      *empty*      3
 13-16   *empty*      2
-LAG1    Both Mac Pro 2
+LAG1    Mac Pro 1+2  2
 ======= ============ ==================
 
 Operating System
