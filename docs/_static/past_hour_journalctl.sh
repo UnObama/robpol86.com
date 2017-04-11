@@ -19,8 +19,7 @@ journalctl -o json "$@" |while read -r line; do
     done < <(jq -r "to_entries|map(\"\(.key)=\(.value)\")|.[]" <<< "$line")
 
     # Print.
-    output=$(date -d @${json['__REALTIME_TIMESTAMP']:0:-6} '+%b %d %T')
-    output+=" ${json['_HOSTNAME']} ${json['_COMM']}[${json['_PID']}]:"
-    output+=" ${json['MESSAGE']}"
-    echo "$output"
+    echo -n $(date -d @${json['__REALTIME_TIMESTAMP']:0:-6} '+%b %d %T')
+    echo -n " ${json['_HOSTNAME']} ${json['_COMM']}[${json['_PID']}]:"
+    echo " ${json['MESSAGE']}"
 done
