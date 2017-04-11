@@ -11,6 +11,7 @@ set -o pipefail  # Exit script if pipes fail instead of just the last program.
 # Iterate journalctl lines.
 journalctl -o json "$@" |while read -r line; do
     declare -A json  # Scoped in piped while loop.
+    json=()  # Clear array in case "shopt -s lastpipe" is set by the user.
 
     # Read JSON into bash associative array.
     while IFS="=" read -r key value; do
