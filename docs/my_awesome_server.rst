@@ -311,7 +311,7 @@ root emails to my real email address.
 
 .. code-block:: bash
 
-    @hourly past_hour_journalctl --since="1 hour ago" --priority=warning
+    @hourly /usr/local/bin/past_hour_journalctl --since="1 hour ago" --priority=warning
     @monthly /usr/sbin/btrfs scrub start -Bd /storage
 
 Setup InfluxDB and friends by following this guide (takes care of installing Docker too):
