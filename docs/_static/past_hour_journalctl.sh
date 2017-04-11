@@ -18,6 +18,11 @@ journalctl -o json "$@" |while read -r line; do
         json["$key"]="$value"
     done < <(jq -r "to_entries|map(\"\(.key)=\(.value)\")|.[]" <<< "$line")
 
+    # Filter influxdb statements.
+    if [ "${json['CONTAINER_NAME']:-}" == "influxdb" ]; then
+        if [[ "${json['MESSAGE']}" == *"retention policy shard deletion check"* ]]; then continue; fi
+    fi
+
     # Print.
     echo -n $(date -d @${json['__REALTIME_TIMESTAMP']:0:-6} '+%b %d %T')
     echo -n " ${json['_HOSTNAME']} ${json['_COMM']}[${json['_PID']}]:"
