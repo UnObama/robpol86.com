@@ -9,7 +9,7 @@ set -u  # Treat unset variables as errors and exit immediately.
 set -o pipefail  # Exit script if pipes fail instead of just the last program.
 
 # Iterate journalctl lines.
-journalctl --since="1 hour ago" --priority=info -o json |while read -r line; do
+journalctl -o json "$@" |while read -r line; do
     declare -A json  # Scoped in piped while loop.
 
     # Read JSON into bash associative array.
@@ -19,7 +19,7 @@ journalctl --since="1 hour ago" --priority=info -o json |while read -r line; do
 
     # Print.
     output=$(date -d @${json['__REALTIME_TIMESTAMP']:0:-6} '+%b %d %T')
-    output+=" ${json['_HOSTNAME']} ${json['_TRANSPORT']}[${json['_PID']}]:"
+    output+=" ${json['_HOSTNAME']} ${json['_COMM']}[${json['_PID']}]:"
     output+=" ${json['MESSAGE']}"
     echo "$output"
 done
