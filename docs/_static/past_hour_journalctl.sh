@@ -21,6 +21,8 @@ journalctl -o json "$@" |while read -r line; do
     # Filter influxdb statements.
     if [ "${json['CONTAINER_NAME']:-}" == "influxdb" ]; then
         if [[ "${json['MESSAGE']}" == *"retention policy shard deletion check"* ]]; then continue; fi
+        if [[ "${json['MESSAGE']}" == *"new shard group "*" successfully"* ]]; then continue; fi
+        if [[ "${json['MESSAGE']}" == *"database index loaded in"* ]]; then continue; fi
     fi
 
     # Print.
