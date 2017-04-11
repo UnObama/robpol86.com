@@ -24,6 +24,8 @@ journalctl -o json "$@" |while read -r line; do
         if [[ "${json['MESSAGE']}" == *"new shard group "*" successfully"* ]]; then continue; fi
         if [[ "${json['MESSAGE']}" == *"retention policy shard deletion check"* ]]; then continue; fi
         if [[ "${json['MESSAGE']}" == *"Snapshot for path "*" written in"* ]]; then continue; fi
+        if [[ "${json['MESSAGE']}" =~ beginning\ level\ [0-9]+\ compaction\ of ]]; then continue; fi
+        if [[ "${json['MESSAGE']}" =~ compact(ing|ed)\ level\ [0-9]+\  ]]; then continue; fi
     fi
 
     # Print.
